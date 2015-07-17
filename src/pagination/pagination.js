@@ -1,5 +1,3 @@
-angular.module('ui.bootstrap.pagination', [])
-
 .controller('PaginationController', ['$scope', '$attrs', '$parse', function ($scope, $attrs, $parse) {
   var self = this,
       ngModelCtrl = { $setViewValue: angular.noop }, // nullModelCtrl
@@ -43,11 +41,12 @@ angular.module('ui.bootstrap.pagination', [])
   };
 
   this.render = function() {
-    $scope.page = parseInt(ngModelCtrl.$viewValue, 10) || 1;
+      $scope.page = parseInt(ngModelCtrl.$viewValue, 10) || 1;
   };
 
   $scope.selectPage = function(page, evt) {
-    if ( $scope.page !== page && page > 0 && page <= $scope.totalPages) {
+    var disabled_click = $scope.paginationDisabled && evt !== undefined;
+    if (!disabled_click && $scope.page !== page && page > 0 && page <= $scope.totalPages) {
       if (evt && evt.target) {
         evt.target.blur();
       }
@@ -75,7 +74,8 @@ angular.module('ui.bootstrap.pagination', [])
   previousText: 'Previous',
   nextText: 'Next',
   lastText: 'Last',
-  rotate: true
+  rotate: true,
+  paginationDisabled:false
 })
 
 .directive('pagination', ['$parse', 'paginationConfig', function($parse, paginationConfig) {
@@ -86,7 +86,8 @@ angular.module('ui.bootstrap.pagination', [])
       firstText: '@',
       previousText: '@',
       nextText: '@',
-      lastText: '@'
+      lastText: '@',
+      paginationDisabled:'='
     },
     require: ['pagination', '?ngModel'],
     controller: 'PaginationController',
