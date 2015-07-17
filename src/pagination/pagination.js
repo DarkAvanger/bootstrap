@@ -42,12 +42,12 @@ angular.module('ui.bootstrap.pagination', [])
   };
 
   this.render = function() {
-      $scope.page = parseInt(ngModelCtrl.$viewValue, 10) || 1;
+    $scope.page = parseInt(ngModelCtrl.$viewValue, 10) || 1;
   };
 
   $scope.selectPage = function(page, evt) {
-    var disabled_click = $scope.paginationDisabled && evt !== undefined;
-    if (!disabled_click && $scope.page !== page && page > 0 && page <= $scope.totalPages) {
+    var clickAllowed = !$scope.ngDisabled || !evt;
+    if (clickAllowed && $scope.page !== page && page > 0 && page <= $scope.totalPages) {
       if (evt && evt.target) {
         evt.target.blur();
       }
@@ -75,8 +75,7 @@ angular.module('ui.bootstrap.pagination', [])
   previousText: 'Previous',
   nextText: 'Next',
   lastText: 'Last',
-  rotate: true,
-  paginationDisabled:false
+  rotate: true
 })
 
 .directive('pagination', ['$parse', 'paginationConfig', function($parse, paginationConfig) {
@@ -88,7 +87,7 @@ angular.module('ui.bootstrap.pagination', [])
       previousText: '@',
       nextText: '@',
       lastText: '@',
-      paginationDisabled:'='
+      ngDisabled:'='
     },
     require: ['pagination', '?ngModel'],
     controller: 'PaginationController',
